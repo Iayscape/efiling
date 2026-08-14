@@ -39,6 +39,9 @@ $outlets = db()->query('SELECT * FROM outlets WHERE is_active = 1 ORDER BY uruta
     <?php foreach ($outlets as $o): ?>
     <a class="outlet-card" href="<?= e($o['url']) ?>" target="_blank" rel="noopener" style="--accent: <?= e($o['accent_color']) ?>" data-testid="outlet-card-<?= e(slugify($o['nama'])) ?>">
       <span class="outlet-index">0<?= (int)$o['urutan'] ?></span>
+      <?php if (!empty($o['logo_path'])): ?>
+      <div class="outlet-logo"><img src="/<?= e($o['logo_path']) ?>" alt="Logo <?= e($o['nama']) ?>" data-testid="outlet-logo-<?= e(slugify($o['nama'])) ?>"></div>
+      <?php endif; ?>
       <h3><?= e($o['nama']) ?></h3>
       <p><?= e($o['deskripsi']) ?></p>
       <span class="outlet-link"><?= e(preg_replace('#^https?://#', '', $o['url'])) ?> &nearr;</span>

@@ -167,6 +167,7 @@ CREATE TABLE IF NOT EXISTS outlets (
   url VARCHAR(255) NOT NULL,
   deskripsi VARCHAR(255) NULL,
   accent_color VARCHAR(10) NOT NULL DEFAULT '#1d4ed8',
+  logo_path VARCHAR(255) NULL,
   urutan INT NOT NULL DEFAULT 0,
   is_active TINYINT(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -197,13 +198,13 @@ INSERT INTO jenis_penawaran (kode, nama, template_hal, template_body, template_p
 ('BM','Berlangganan Majalah','Penawaran Kerja Sama Berlangganan Majalah Bulan {bulan} {tahun}','Kami sangat bangga dan menyampaikan penghargaan setinggi-tingginya atas kepercayaan yang besar terhadap {media} sebagai bacaan setia.\n\nSebagai media modern penyampai informasi, pendidikan, sosial, budaya, dan hiburan kami menyampaikan penawaran kerja sama berlangganan {media} Bulan {bulan} {tahun}.','BIAYA BERLANGGANAN MAJALAH {MEDIA} U.B {BULAN} {TAHUN}'),
 ('LF','Lensa Foto','Penawaran Publikasi Lensa Foto Kegiatan - {instansi} Bulan {bulan} {tahun}','Sebagai media penyampai informasi, pendidikan, sosial, budaya, dan hiburan, kami menyampaikan penawaran publikasi lensa foto kegiatan {instansi} yang akan dimuat pada {media} Bulan {bulan} {tahun}.\n\nDemikian penawaran ini kami sampaikan dengan harapan dapat terjalin kerja sama yang baik.','BIAYA PUBLIKASI LENSA FOTO KEGIATAN {INSTANSI} U.B {BULAN} {TAHUN}');
 
-INSERT INTO outlets (nama, url, deskripsi, accent_color, urutan) VALUES
-('Koran Barito','https://onlinekoranbarito.com','Tabloid & portal berita Kalimantan Tengah','#b91c1c',1),
-('Sinar Barito','https://onlinesinarbarito.com','Tabloid & portal berita Kalimantan Selatan','#1d4ed8',2),
-('Suluh Banua','https://suluhbanua.news','Majalah & portal berita','#15803d',3),
-('Banta News','https://bantanews.com','Portal berita terkini','#7c3aed',4),
-('Barito Bersinar','https://baritobersinar.news','Portal berita regional','#b45309',5),
-('Selidah Nusantara','https://selidahnusantara.id','Portal berita nasional','#0e7490',6);
+INSERT INTO outlets (nama, url, deskripsi, accent_color, logo_path, urutan) VALUES
+('Koran Barito','https://onlinekoranbarito.com','Tabloid & portal berita Kalimantan Tengah','#b91c1c','assets/img/outlets/koran-barito.jpg',1),
+('Sinar Barito','https://onlinesinarbarito.com','Tabloid & portal berita Kalimantan Selatan','#1d4ed8','assets/img/outlets/sinar-barito.jpg',2),
+('Suluh Banua','https://suluhbanua.news','Majalah & portal berita','#15803d','assets/img/outlets/suluh-banua.png',3),
+('Banta News','https://bantanews.com','Portal berita terkini','#7c3aed','assets/img/outlets/banta-news.jpg',4),
+('Barito Bersinar','https://baritobersinar.news','Portal berita regional','#b45309','assets/img/outlets/barito-bersinar.jpg',5),
+('Selidah Nusantara','https://selidahnusantara.id','Portal berita nasional','#0e7490','assets/img/outlets/selidah-nusantara.jpg',6);
 
 INSERT INTO settings (setting_key, setting_value) VALUES
 ('site_tagline','Grup Media Terpercaya di Kalimantan'),

@@ -45,7 +45,7 @@ Saat instalasi, sistem otomatis mengisi:
 - 4 jenis penawaran: Advertorial (Adv), Iklan (Ikn), Berlangganan Majalah
   (BM), Lensa Foto (LF) — semua bisa diubah/ditambah di menu **Jenis
   Penawaran**.
-- 6 outlet untuk homepage.
+- 6 outlet untuk homepage, lengkap dengan logo masing-masing media.
 
 Semua data ini bisa diubah kapan saja lewat menu admin (Instansi, Media,
 Jenis Penawaran).
