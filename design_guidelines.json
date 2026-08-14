@@ -1,0 +1,113 @@
+{
+  "typography": {
+    "google_fonts_link": "<link href=\"https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap\" rel=\"stylesheet\">",
+    "fonts": {
+      "heading": "'Playfair Display', serif",
+      "body": "'IBM Plex Sans', sans-serif"
+    },
+    "scale": {
+      "h1": "clamp(2.5rem, 5vw, 4rem)",
+      "h2": "clamp(2rem, 4vw, 3rem)",
+      "h3": "clamp(1.5rem, 3vw, 2rem)",
+      "h4": "clamp(1.25rem, 2vw, 1.5rem)",
+      "body": "1rem",
+      "small": "0.875rem"
+    },
+    "rules": "Use Playfair Display exclusively on the Homepage for an editorial, high-end, premium media brand feel. Do not use Playfair on the Dashboard. Use IBM Plex Sans for all dashboard UI, data tables, and forms to maximize data legibility and functional density."
+  },
+  "colors": {
+    "strategy": "CSS Custom Properties (Variables) mapped to root. Dashboard relies strictly on variables to enable the 100+ theme switcher.",
+    "core_variables": {
+      "--bg": "Background color of the application",
+      "--surface": "Background of cards, tables, sidebars",
+      "--surface-hover": "Hover state for table rows and list items",
+      "--primary": "Main brand color (buttons, active navigation, links)",
+      "--primary-hover": "Hover state for primary elements",
+      "--text-main": "Primary text (headings, table data)",
+      "--text-muted": "Secondary text (labels, placeholders, metadata)",
+      "--border": "Dividers, input borders, and table borders"
+    },
+    "homepage_theme": {
+      "description": "Fixed Luxury Corporate Dark Theme. Independent of the dashboard theme switcher.",
+      "variables": {
+        "--bg": "#0a0a0a",
+        "--surface": "#141414",
+        "--primary": "#ffffff",
+        "--text-main": "#ffffff",
+        "--text-muted": "#a1a1aa",
+        "--border": "#27272a"
+      }
+    }
+  },
+  "theming_system": {
+    "description": "The user requested 100+ preset color palettes covering Black, White, Blue, Yellow, and Red base tones for dashboard personalization.",
+    "implementation_steps": [
+      "Create a standalone vanilla JS file (e.g., `theme-manager.js`).",
+      "Generate an array of at least 100 theme objects grouped by base tones (Black, White, Blue, Yellow, Red). Instead of manual typing, you can write a JS initialization function that dynamically generates hues and shades to populate the 100 themes, OR explicitly hardcode a large robust list.",
+      "Each theme object must map to the `--bg`, `--surface`, `--primary`, `--text-main`, `--text-muted`, and `--border` CSS variables.",
+      "Render a grid of 100 clickable color swatches in the Settings Page. Group them by their base tone.",
+      "On click, apply the selected theme variables to `document.documentElement.style` and persist the chosen `theme_id` using `localStorage` and a PHP cookie (to prevent FOUC on page load)."
+    ]
+  },
+  "grids_and_layouts": {
+    "homepage": {
+      "hero": "Flexbox layout. Min-height: 80vh. Center or left-aligned typography. Overlay the background image with a dark linear gradient (`rgba(10,10,10,0.9)` to `rgba(10,10,10,0.4)`) to ensure perfect contrast. DO NOT use a complete transparent background in header overlays.",
+      "outlet_showcase": "CSS Grid. `grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;`. Ensure large negative space around the grid. Cards should have the logo/title and a subtle background image of the specific outlet."
+    },
+    "dashboard": {
+      "main_structure": "CSS Grid: `grid-template-columns: 250px 1fr;`. Sidebar must have `height: 100vh; position: sticky; top: 0;`. Main content takes the remaining space.",
+      "data_tables": "Wrapped in a container with `overflow-x: auto` for responsive scroll. Toolbar above the table must use Flexbox with `justify-content: space-between` to separate filters from bulk actions."
+    }
+  },
+  "components": {
+    "tables": "Use standard HTML `<table>`. `width: 100%; border-collapse: collapse;`. `th` must be uppercase, small tracking, and use `--text-muted`. Row hover states must be visible (`--surface-hover`). Provide checkboxes in the first column for multi-select.",
+    "forms_and_inputs": "Inputs: `padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 4px; background: transparent; color: var(--text-main);`. Focus state must have `outline: 2px solid var(--primary); outline-offset: -1px;`.",
+    "dynamic_form_lines": "Vanilla JS must handle adding/removing 'Surat Penawaran' line items. Use HTML `<template>` and JS `.cloneNode(true)` to insert new rows. Each row must have a clearly visible remove button.",
+    "buttons": "Apply padding `0.75rem 1.5rem`, `border-radius: 4px` (or pill-shaped for homepage). Smooth background and transform transitions.",
+    "theme_swatch": "A round button (`width: 2rem; height: 2rem; border-radius: 50%;`) representing the primary color of the theme. Add a visible ring when marked as active."
+  },
+  "motion": {
+    "rules": "Do NOT use `transition: all`. Use specific transitions: `transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;`.",
+    "interactions": "Homepage cards should have an image scale effect on hover (`transform: scale(1.05)` inside an `overflow: hidden` container) and desaturation-to-color shift."
+  },
+  "images_and_media": {
+    "image_urls": [
+      {
+        "url": "https://images.unsplash.com/photo-1709497197725-2e97c76b31d0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBvZmZpY2UlMjBidWlsZGluZyUyMGV4dGVyaW9yfGVufDB8fHx8MTc4NjcxNDI5MHww&ixlib=rb-4.1.0&q=85",
+        "category": "Homepage Hero Background",
+        "description": "Modern office building exterior representing the corporate holding group."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1503694978374-8a2fa686963a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwxfHxwcmludGluZyUyMHByZXNzJTIwbmV3c3BhcGVyfGVufDB8fHx8MTc4NjczNTQ4M3ww&ixlib=rb-4.1.0&q=85",
+        "category": "Koran Barito & Sinar Barito Outlet",
+        "description": "Printing machine for the newspaper and tabloid outlets."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1750684333876-07303b57fb13?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzV8MHwxfHNlYXJjaHw0fHxlZGl0b3JpYWwlMjBtYWdhemluZSUyMHN0YWNrfGVufDB8fHx8MTc4NjczNTQ4M3ww&ixlib=rb-4.1.0&q=85",
+        "category": "Suluh Banua Outlet",
+        "description": "Stack of magazines suitable for the magazine outlet."
+      }
+    ],
+    "usage_rules": "Always apply `object-fit: cover` to images. Never stretch them."
+  },
+  "accessibility": {
+    "testing_attributes": "CRITICAL: All interactive and key informational elements MUST include a `data-testid` attribute (e.g., `data-testid=\"login-btn\"`, `data-testid=\"add-line-item\"`, `data-testid=\"theme-swatch-blue-1\"`).",
+    "contrast": "Ensure text mapped to `--text-main` meets WCAG AA (4.5:1) against background colors.",
+    "focus_states": "Provide clear `:focus-visible` styles for all dashboard inputs and buttons."
+  },
+  "instructions_to_main_agent": [
+    "TECH STACK ENFORCEMENT: Write ONLY in Plain PHP, HTML, vanilla CSS, and vanilla JS. DO NOT use React, Vue, Tailwind CSS, Shadcn, or any NPM build steps.",
+    "DEPLOYMENT ENFORCEMENT: The application must be instantly ready for cPanel/Shared Hosting. No Webpack, no Vite. Include CSS natively via `<link rel=\"stylesheet\" href=\"style.css\">`.",
+    "100+ THEMES GENERATION: You MUST write a JS script/function that outputs at least 100 color themes spanning Black, White, Blue, Yellow, and Red variations, populating a Settings UI. Bind them to CSS root custom properties.",
+    "DYNAMIC FORMS: Use Vanilla JS to implement the logic for adding/removing line items in the 'Surat Penawaran' form.",
+    "DOCUMENT NUMBER AUTO-GEN: Use PHP and standard formatting to auto-generate document numbers for tracking."
+  ],
+  "universal_guidelines": [
+    "Design for contrast and depth without using pre-built libraries. Use raw CSS box-shadows, rem spacing, and structural typography.",
+    "Use 2-3x more spacing than feels comfortable. Apply generous padding (e.g., `2rem` or `3rem`) to dashboard sections to prevent a cramped look.",
+    "Homepage is a high-end corporate identity: rely on large typography, stark contrasts, and elegant imagery.",
+    "Do not use generic centered text alignment on the homepage; prefer left-aligned blocks that follow the editorial grid.",
+    "Never use completely transparent backgrounds under text overlay. Use linear-gradients or solid backdrop layers.",
+    "In the dashboard, optimize purely for fast data consumption and density without sacrificing aesthetic cleanliness."
+  ]
+}
