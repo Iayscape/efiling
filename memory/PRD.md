@@ -140,6 +140,21 @@ Testing oleh agent dilewati atas permintaan user (user menguji sendiri).
   sudah dihapus lagi setelah pengujian (tidak ikut dalam source yang
   di-deploy user, sesuai desain `install.php`).
 
+## Catatan Deployment Penting (2026-08-15)
+- User melaporkan "tidak ada perubahan" setelah push GitHub + deploy cPanel.
+  Root cause TERKONFIRMASI: bukan bug kode — file sudah benar di server sejak
+  awal (dicek langsung via editor cPanel). Masalahnya database production
+  user sudah ada isinya sebelum perbaikan round 2, sehingga kolom
+  `outlets.tagline`, `outlets.logo_path`, `media.logo_path` tetap
+  kosong/lama (schema.sql hanya jalan otomatis saat instalasi baru).
+- **Solusi**: `sql/migration_2026-08-15_media_split_logos.sql` — dijalankan
+  manual via phpMyAdmin di database production user. Sudah dikonfirmasi user
+  BERHASIL: tagline+logo homepage & logo kop surat PDF/Word semua muncul.
+- **Pelajaran untuk ke depan**: setiap kali ada perubahan `schema.sql` yang
+  menyentuh data seed (bukan hanya struktur tabel), WAJIB sediakan file
+  migrasi terpisah di `sql/migration_*.sql` untuk database yang sudah
+  terinstal sebelumnya, jangan andalkan `schema.sql` saja.
+
 ## Backlog / P1-P2 (belum dikerjakan, menunggu feedback user)
 - P1: Halaman edit outlet homepage dari UI (saat ini via tabel `outlets`,
   butuh phpMyAdmin manual untuk ubah selain lewat DB).
