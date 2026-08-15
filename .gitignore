@@ -87,3 +87,7 @@ credentials.json
 *.key
 .credentials
 uploads/berkas.zip
+
+# Native PHP e-filing app: local DB config & generated caches must never be committed
+efiling-app/config.php
+efiling-app/storage/cache/*
