@@ -155,6 +155,27 @@ Testing oleh agent dilewati atas permintaan user (user menguji sendiri).
   migrasi terpisah di `sql/migration_*.sql` untuk database yang sudah
   terinstal sebelumnya, jangan andalkan `schema.sql` saja.
 
+## Implemented (2026-08-15, Round 3) - 3 Permintaan Lanjutan
+- **Kop surat logo-only**: Header PDF/Word disederhanakan jadi HANYA logo (dipusatkan,
+  proporsional, max 320x80px PDF / 260x75pt Word) — teks nama perusahaan/media
+  dihapus dari header (sesuai contoh referensi surat asli user). Nama
+  perusahaan lengkap tetap ada di footer legal.
+- **Watermark logo di Kwitansi**: logo media di-fade jadi ~9% opacity (GD:
+  flatten alpha ke putih lalu blend low-opacity, di-cache di
+  `storage/cache/wm_*.png`) lalu ditempel di background Kwitansi — PDF via
+  `position:fixed` + z-index rendah, Word via VML `position:absolute` +
+  `z-index:-2147483647` (behind text). Hanya di Kwitansi, bukan Surat
+  Penawaran (permintaan eksplisit user untuk anti-pemalsuan kwitansi).
+- **Halaman baru "Konsep Surat & Kwitansi"** (`admin/konsep.php` +
+  `assets/js/konsep.js`): form khusus edit `template_hal`/`template_body`/
+  `template_pembayaran` per jenis penawaran (terpisah dari `jenis.php` yang
+  fokus ke kode/nomor), dengan live preview client-side mengganti token
+  `{instansi}/{media}/{bulan}/{tahun}` pakai data contoh. Link ditambahkan
+  di sidebar > Data Master.
+- Semua diuji manual via curl + render PDF/DOCX ke gambar (poppler) +
+  ekstrak XML docx (cek `<v:shape>` posisi absolute/z-index untuk watermark)
+  + screenshot Playwright untuk live preview konsep. Tanpa testing_agent.
+
 ## Backlog / P1-P2 (belum dikerjakan, menunggu feedback user)
 - P1: Halaman edit outlet homepage dari UI (saat ini via tabel `outlets`,
   butuh phpMyAdmin manual untuk ubah selain lewat DB).

@@ -36,12 +36,8 @@ function letter_css(int $rowCount = 0): string {
     return '
     body{font-family:"DejaVu Sans",sans-serif;font-size:' . $t['body'] . 'px;color:#111;line-height:' . $t['lh'] . '}
     .accent-bar{height:5px}
-    .letterhead{padding:' . round($t['gap'] * 0.7) . 'px 0 ' . round($t['gap'] * 0.5) . 'px;border-bottom:2px solid #111;margin-bottom:' . $t['gap'] . 'px;display:table;width:100%}
-    .letterhead-logo{display:table-cell;width:150px;vertical-align:middle;padding-right:14px}
-    .letterhead-logo img{max-height:42px;max-width:150px;display:block}
-    .letterhead-text{display:table-cell;vertical-align:middle}
-    .letterhead .co-name{font-size:' . ($t['body'] + 4.5) . 'px;font-weight:bold;letter-spacing:.5px}
-    .letterhead .co-sub{font-size:' . ($t['body'] - 1.5) . 'px;color:#444}
+    .letterhead{padding:' . round($t['gap'] * 0.7) . 'px 0 ' . round($t['gap'] * 0.5) . 'px;border-bottom:2px solid #111;margin-bottom:' . $t['gap'] . 'px;text-align:center}
+    .letterhead img{max-height:80px;max-width:320px;margin:0 auto;display:block}
     .doc-meta td{padding:1px 6px;vertical-align:top;font-size:' . $t['body'] . 'px}
     table.items{width:100%;border-collapse:collapse;margin:' . round($t['gap'] * 0.8) . 'px 0}
     table.items th,table.items td{border:1px solid #333;padding:4px 7px;font-size:' . $t['cell'] . 'px}
@@ -52,6 +48,8 @@ function letter_css(int $rowCount = 0): string {
     .sig-img{max-height:60px;max-width:170px;margin:4px auto;display:block}
     .footer-legal{margin-top:' . $t['foot'] . 'px;border-top:1px solid #999;padding-top:6px;font-size:9px;color:#333;clear:both}
     .clearfix{clear:both}
+    .watermark{position:fixed;top:32%;left:12%;width:76%;text-align:center;z-index:-100}
+    .watermark img{width:100%;max-height:420px;object-fit:contain}
     ';
 }
 
@@ -59,15 +57,19 @@ function media_letterhead_html(array $media): string {
     $logo = '';
     if (!empty($media['logo_path'])) {
         $path = realpath(__DIR__ . '/../' . $media['logo_path']);
-        if ($path) $logo = '<div class="letterhead-logo"><img src="file://' . $path . '"></div>';
+        if ($path) $logo = '<img src="file://' . $path . '">';
+    } else {
+        $logo = '<strong style="font-size:16px">' . e($media['perusahaan']) . '</strong>';
     }
     return '<div class="accent-bar" style="background:' . e($media['accent_color']) . '"></div>
-    <div class="letterhead">' . $logo . '
-      <div class="letterhead-text">
-        <div class="co-name">' . e($media['perusahaan']) . '</div>
-        <div class="co-sub">' . e($media['nama']) . '</div>
-      </div>
-    </div>';
+    <div class="letterhead">' . $logo . '</div>';
+}
+
+function watermark_html(array $media): string {
+    if (empty($media['logo_path'])) return '';
+    $faded = faded_logo_path($media['logo_path']);
+    if (!$faded) return '';
+    return '<div class="watermark"><img src="file://' . $faded . '"></div>';
 }
 
 function media_footer_html(array $media): string {
@@ -138,6 +140,7 @@ function build_kwitansi_html(array $kwitansi, array $items, array $media): strin
         $rows = '<table class="items"><tbody>' . $rows . '</tbody></table>';
     }
     return '<html><head><meta charset="UTF-8"><style>' . letter_css() . '</style></head><body>' .
+        watermark_html($media) .
         media_letterhead_html($media) .
         '<h3 style="text-align:center;letter-spacing:1px">KWITANSI</h3>' .
         '<table class="doc-meta">' .

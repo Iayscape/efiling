@@ -66,3 +66,36 @@ function safe_filename(string $s): string {
     $s = preg_replace('/[\/\\\\:*?"<>|]+/', '-', $s);
     return trim($s);
 }
+
+function faded_logo_path(string $logoPath, int $opacityPct = 9): ?string {
+    $src = realpath(__DIR__ . '/../' . $logoPath);
+    if (!$src) return null;
+    $cacheDir = __DIR__ . '/../storage/cache';
+    if (!is_dir($cacheDir)) @mkdir($cacheDir, 0775, true);
+    $cacheFile = $cacheDir . '/wm_' . md5($logoPath . $opacityPct) . '.png';
+    if (file_exists($cacheFile) && filemtime($cacheFile) >= filemtime($src)) {
+        return $cacheFile;
+    }
+    $info = @getimagesize($src);
+    if (!$info) return null;
+    $srcImg = $info['mime'] === 'image/png' ? @imagecreatefrompng($src) : @imagecreatefromjpeg($src);
+    if (!$srcImg) return null;
+    $w = imagesx($srcImg);
+    $h = imagesy($srcImg);
+    // Step 1: flatten source (with possible alpha) onto white so transparent areas become white
+    $flat = imagecreatetruecolor($w, $h);
+    $white = imagecolorallocate($flat, 255, 255, 255);
+    imagefill($flat, 0, 0, $white);
+    imagealphablending($flat, true);
+    imagecopy($flat, $srcImg, 0, 0, 0, 0, $w, $h);
+    // Step 2: blend the flattened (fully opaque) image onto white at low opacity
+    $canvas = imagecreatetruecolor($w, $h);
+    $white2 = imagecolorallocate($canvas, 255, 255, 255);
+    imagefill($canvas, 0, 0, $white2);
+    imagecopymerge($canvas, $flat, 0, 0, 0, 0, $w, $h, $opacityPct);
+    imagepng($canvas, $cacheFile);
+    imagedestroy($srcImg);
+    imagedestroy($flat);
+    imagedestroy($canvas);
+    return $cacheFile;
+}

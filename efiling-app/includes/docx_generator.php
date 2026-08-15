@@ -38,18 +38,25 @@ function docx_letterhead(\PhpOffice\PhpWord\Element\Section $section, array $med
     if (!empty($media['logo_path'])) {
         $path = realpath(__DIR__ . '/../' . $media['logo_path']);
         if ($path) {
-            $box = docx_image_box($path);
-            $head = $section->addTable(['cellMargin' => 0]);
-            $head->addRow();
-            $head->addCell(1800)->addImage($path, ['width' => $box['width'], 'height' => $box['height']]);
-            $cell = $head->addCell(7700);
-            $cell->addText($media['perusahaan'], ['bold' => true, 'size' => $t['title']]);
-            $cell->addText($media['nama'], ['size' => $t['sub'], 'color' => '555555']);
+            $box = docx_image_box($path, 260, 75);
+            $section->addImage($path, ['width' => $box['width'], 'height' => $box['height'], 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
             return;
         }
     }
-    $section->addText($media['perusahaan'], ['bold' => true, 'size' => $t['title']]);
-    $section->addText($media['nama'], ['size' => $t['sub'], 'color' => '555555']);
+    $section->addText($media['perusahaan'], ['bold' => true, 'size' => $t['title']], ['alignment' => 'center']);
+}
+
+function docx_watermark(\PhpOffice\PhpWord\Element\Section $section, array $media): void {
+    if (empty($media['logo_path'])) return;
+    $faded = faded_logo_path($media['logo_path']);
+    if (!$faded) return;
+    $box = docx_image_box($faded, 420, 420);
+    $section->addImage($faded, [
+        'width' => $box['width'], 'height' => $box['height'],
+        'pos' => 'absolute', 'wrap' => 'behind',
+        'hPos' => 'center', 'hPosRelTo' => 'page',
+        'vPos' => 'center', 'vPosRelTo' => 'page',
+    ]);
 }
 
 function build_surat_docx(array $surat, array $items, array $media, array $instansi): PhpWord {
@@ -127,6 +134,7 @@ function build_kwitansi_docx(array $kwitansi, array $items, array $media): PhpWo
     $phpWord = new PhpWord();
     $section = $phpWord->addSection(['paperSize' => 'Folio', 'marginTop' => 700, 'marginBottom' => 700]);
 
+    docx_watermark($section, $media);
     docx_letterhead($section, $media, $t);
     $section->addTextBreak($t['break1']);
     $section->addText('KWITANSI', ['bold' => true, 'size' => $t['title'] - 1], ['alignment' => 'center']);
