@@ -28,6 +28,22 @@ document.addEventListener('DOMContentLoaded', function () {
     link.addEventListener('click', closeSidebar);
   });
 
+  var accountDropdown = document.querySelector('[data-testid="account-dropdown"]');
+  var accountTrigger = document.querySelector('[data-testid="account-trigger-btn"]');
+  if (accountDropdown && accountTrigger) {
+    accountTrigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isOpen = accountDropdown.classList.toggle('open');
+      accountTrigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    document.addEventListener('click', function (e) {
+      if (!accountDropdown.contains(e.target)) accountDropdown.classList.remove('open');
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') accountDropdown.classList.remove('open');
+    });
+  }
+
   var selectAll = document.querySelector('[data-testid="select-all-checkbox"]');
   if (selectAll) {
     selectAll.addEventListener('change', function () {

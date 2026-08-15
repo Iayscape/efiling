@@ -12,8 +12,8 @@ function navlink($href, $label, $key, $active) {
 <div class="sidebar-overlay" data-testid="sidebar-overlay"></div>
 <aside class="sidebar" data-testid="sidebar">
   <div class="sidebar-brand">
-    <strong>Barito Media Group</strong>
-    <span>E-Filing Digital</span>
+    <strong>Arsip Digital</strong>
+    <span>Barito Media Group</span>
   </div>
   <div class="nav-group">
     <?php navlink('/admin/dashboard.php', 'Dashboard', 'dashboard', $__nav); ?>
@@ -30,14 +30,20 @@ function navlink($href, $label, $key, $active) {
     <?php navlink('/admin/users.php', 'Pengguna', 'users', $__nav); ?>
     <?php endif; ?>
   </div>
-  <div class="nav-section-title">Akun</div>
-  <div class="nav-group">
-    <?php navlink('/admin/settings.php', 'Personalisasi Tampilan', 'settings', $__nav); ?>
-    <?php navlink('/admin/profile.php', 'Profil Saya', 'profile', $__nav); ?>
-  </div>
-  <div class="sidebar-footer">
-    Masuk sebagai<br><strong style="color:var(--text-main)"><?= e($__u['name'] ?? '') ?></strong>
-    <br><a href="/logout.php" data-testid="nav-logout-btn" style="color:#f87171">Keluar</a>
+  <div class="account-dropdown" data-testid="account-dropdown">
+    <button type="button" class="account-trigger" data-testid="account-trigger-btn" aria-expanded="false">
+      <span class="account-avatar"><?= e(mb_substr($__u['name'] ?? '?', 0, 1)) ?></span>
+      <span class="account-info">
+        <strong><?= e($__u['name'] ?? '') ?></strong>
+        <span><?= e($__u['role'] === 'admin' ? 'Administrator' : 'Staff') ?></span>
+      </span>
+      <svg class="account-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="account-menu" data-testid="account-menu">
+      <a href="/admin/settings.php" data-testid="account-menu-settings">Personalisasi Tampilan</a>
+      <a href="/admin/profile.php" data-testid="account-menu-profile">Profil Saya</a>
+      <a href="/logout.php" class="account-menu-logout" data-testid="account-menu-logout">Keluar</a>
+    </div>
   </div>
 </aside>
 <main class="main-content">

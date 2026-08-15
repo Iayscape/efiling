@@ -98,6 +98,48 @@ Testing oleh agent dilewati atas permintaan user (user menguji sendiri).
   (`test_reports/iteration_1.json` & `iteration_2.json`) — status akhir:
   semua skenario PASS, tidak ada isu terbuka.
 
+## Implemented (2026-08-15, Round 2) - 6 Perbaikan Detail
+- **Kontras warna**: sudah diverifikasi ulang (screenshot), 120 tema tetap kontras
+  tinggi, tidak ada perubahan diperlukan.
+- **Pemisahan media cetak/online**: `media.kode` tidak lagi UNIQUE (sengaja, agar
+  KB & SB bisa punya 2 baris — cetak & online — dengan kode sama). Total kini 9
+  baris media: KB (cetak: Koran Barito, online: onlinekoranbarito.com), SB
+  (cetak: Sinar Barito, online: onlinesinarbarito.com), MSB (cetak, Suluh
+  Banua), SBN (online, suluhbanua.news), BN, BBN, SN — masing-masing dengan
+  logo resmi sendiri. Penomoran dokumen tetap independen per `media_id`
+  (`doc_counters`), jadi 2 baris berkode sama tetap punya urutan nomor sendiri.
+- **Logo resmi kop surat**: 9 logo asli (dari `Logo Kop Surat.zip`) disalin ke
+  `assets/img/logos/`, dipasang di kolom `media.logo_path`. `pdf_generator.php`
+  & `docx_generator.php` sekarang benar-benar merender logo di kop surat
+  (sebelumnya hanya teks nama perusahaan, logo tidak pernah dirender). Perlu
+  `Options::setChroot()` di Dompdf agar file lokal `file://` tidak diblokir.
+  Ukuran box logo disesuaikan (150x42px PDF, 130x42pt Word) + auto-scale
+  proporsional (dihitung dari `getimagesize()`) karena logo asli berbentuk
+  banner lebar (rasio ~4:1–5.5:1), bukan kotak.
+- **Homepage — logo outlet asli**: 6 outlet (`outlets.logo_path`) diganti dari
+  foto stok ke logo resmi domain online masing-masing (karena kartu outlet
+  & mega menu link ke website online). Tagline sudah ada sejak round 1.
+- **Navbar/sidebar dropdown**: sidebar admin — teks utama diganti
+  "Barito Media Group" → "**Arsip Digital**" (subtitle: Barito Media Group).
+  Footer akun statis diganti jadi dropdown interaktif (avatar+nama, klik untuk
+  buka menu Personalisasi/Profil/Keluar, animasi slide+fade, klik-luar/Escape
+  untuk tutup). Mega menu homepage — logo box diperbesar (52px, kontain
+  proporsional), border/shadow/hover state diperhalus, background gradient.
+- **Kolom harga dinamis di dokumen**: `build_surat_html/docx` sekarang hanya
+  merender kolom "Harga/Tahun" jika minimal 1 item mengisi harga tahunan —
+  kolom otomatis disembunyikan bila semua kosong (PDF & Word).
+- **Ukuran F4 + auto-shrink 1 halaman**: Dompdf `setPaper([0,0,612.28,935.43])`
+  (F4 pt). PHPWord `paperSize => 'Folio'` (8.5"x13", setara F4). Font/spacing
+  otomatis mengecil 3 tingkat berdasarkan jumlah item (≤5 / 6-9 / ≥10 baris)
+  di kedua generator, supaya surat & kwitansi tetap 1 halaman meski banyak
+  rubrik. Sudah diuji dengan 12 item → tetap 1 halaman (diverifikasi via
+  `pypdf` mediabox check + render visual `pdftoppm`).
+- Semua diuji manual (curl + screenshot + render PDF/DOCX ke gambar via
+  poppler) dengan MySQL/PHP lokal sementara di sandbox — **testing_agent
+  TIDAK dipakai** sesuai permintaan eksplisit user. `config.php` sandbox
+  sudah dihapus lagi setelah pengujian (tidak ikut dalam source yang
+  di-deploy user, sesuai desain `install.php`).
+
 ## Backlog / P1-P2 (belum dikerjakan, menunggu feedback user)
 - P1: Halaman edit outlet homepage dari UI (saat ini via tabel `outlets`,
   butuh phpMyAdmin manual untuk ubah selain lewat DB).

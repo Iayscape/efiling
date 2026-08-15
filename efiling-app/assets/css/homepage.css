@@ -22,14 +22,14 @@ button{font-family:inherit}
 .btn-login{border:1px solid rgba(255,255,255,0.35);padding:.6rem 1.4rem;border-radius:999px;font-size:.85rem;transition:background-color .2s ease, transform .2s ease;white-space:nowrap}
 .btn-login:hover{background:rgba(255,255,255,0.12);transform:translateY(-1px)}
 
-.mega-menu{position:absolute;top:100%;left:0;right:0;background:#0f0f0f;border-bottom:1px solid rgba(255,255,255,0.1);box-shadow:0 30px 60px rgba(0,0,0,0.5);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .25s ease, transform .25s ease, visibility .25s ease}
+.mega-menu{position:absolute;top:100%;left:0;right:0;background:linear-gradient(180deg,#111111,#0a0a0a);border-bottom:1px solid rgba(255,255,255,0.1);border-top:2px solid rgba(255,255,255,0.15);box-shadow:0 40px 80px rgba(0,0,0,0.6);opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .28s ease, transform .28s ease, visibility .28s ease}
 .nav-item.menu-open .mega-menu{opacity:1;visibility:visible;transform:translateY(0)}
-.mega-menu-inner{max-width:1280px;margin:0 auto;padding:2.25rem 2rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
-.mega-menu-item{display:flex;align-items:center;gap:1rem;padding:.85rem;border-radius:10px;transition:background-color .2s ease}
-.mega-menu-item:hover{background:rgba(255,255,255,0.06)}
-.mega-menu-logo{background:#fff;border-radius:8px;padding:.5rem .7rem;flex-shrink:0}
-.mega-menu-logo img{height:18px;width:auto;display:block}
-.mega-menu-text strong{display:block;font-size:.95rem;font-family:'Playfair Display',serif}
+.mega-menu-inner{max-width:1280px;margin:0 auto;padding:2.5rem 2rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.mega-menu-item{display:flex;align-items:center;gap:1.1rem;padding:.9rem 1rem;border-radius:12px;border:1px solid transparent;transition:background-color .2s ease,border-color .2s ease,transform .2s ease}
+.mega-menu-item:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);transform:translateX(4px)}
+.mega-menu-logo{background:#fff;border-radius:8px;padding:.4rem;flex-shrink:0;width:52px;height:52px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.25)}
+.mega-menu-logo img{max-height:44px;max-width:44px;width:auto;height:auto;object-fit:contain;display:block}
+.mega-menu-text strong{display:block;font-size:.98rem;font-family:'Playfair Display',serif}
 .mega-menu-text span{display:block;font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.15rem}
 
 .mobile-nav-toggle{display:none;background:none;border:1px solid rgba(255,255,255,0.3);border-radius:8px;width:2.6rem;height:2.6rem;align-items:center;justify-content:center;color:#fff;cursor:pointer}
@@ -40,7 +40,8 @@ button{font-family:inherit}
 .mobile-drawer-list{padding:0 1.25rem 2rem}
 .mobile-drawer-item{display:flex;align-items:center;gap:.9rem;padding:.9rem 0;border-bottom:1px solid rgba(255,255,255,0.08)}
 .mobile-drawer-item img{height:16px}
-.mobile-drawer-item .mega-menu-logo{padding:.4rem .55rem}
+.mobile-drawer-item .mega-menu-logo{width:40px;height:40px;padding:.3rem}
+.mobile-drawer-item .mega-menu-logo img{max-height:32px;max-width:32px}
 .mobile-drawer-login{display:block;text-align:center;margin:1.5rem 1.25rem 0;padding:.85rem;border:1px solid rgba(255,255,255,0.3);border-radius:999px}
 .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:90;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s ease}
 .drawer-overlay.visible{opacity:1;visibility:visible}
@@ -74,8 +75,8 @@ button{font-family:inherit}
 .outlet-card::before{content:"";position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent)}
 .outlet-card:hover{transform:translateY(-6px);border-color:var(--accent)}
 .outlet-index{color:var(--accent);font-weight:700;font-size:.85rem;letter-spacing:.05em}
-.outlet-logo{background:#fff;border-radius:8px;padding:.75rem 1rem;display:inline-flex;align-items:center;margin:.9rem 0 .2rem;box-shadow:0 4px 14px rgba(0,0,0,0.25)}
-.outlet-logo img{height:28px;width:auto;object-fit:contain;display:block}
+.outlet-logo{background:#fff;border-radius:8px;padding:.6rem;display:inline-flex;align-items:center;justify-content:center;margin:.9rem 0 .2rem;box-shadow:0 4px 14px rgba(0,0,0,0.25);width:64px;height:64px}
+.outlet-logo img{max-height:52px;max-width:52px;width:auto;height:auto;object-fit:contain;display:block}
 .outlet-card h3{font-size:1.5rem;margin:.75rem 0 .25rem}
 .outlet-tagline{font-style:italic;color:var(--accent);font-size:.85rem;margin:0 0 .6rem}
 .outlet-card p{color:var(--text-muted);font-size:.92rem;margin-bottom:1.5rem}
