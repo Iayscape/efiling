@@ -176,6 +176,20 @@ Testing oleh agent dilewati atas permintaan user (user menguji sendiri).
   ekstrak XML docx (cek `<v:shape>` posisi absolute/z-index untuk watermark)
   + screenshot Playwright untuk live preview konsep. Tanpa testing_agent.
 
+## Implemented (2026-08-16, Round 4) - Master Rubrik & Rename Kolom
+- **Master data Rubrik/Item baru** (`admin/rubrik.php`, tabel `rubrik`): CRUD
+  sederhana (tambah/ubah/nonaktifkan). Field "Nama Rubrik" di
+  `surat_form.php` & "Nama Item" di `kwitansi_form.php` sekarang `<select>`
+  dari master ini (tidak ketik ulang) — data lama yang belum ada di master
+  tetap tampil sebagai opsi terpilih (fallback, tidak hilang). Migrasi untuk
+  hosting yang sudah ada isinya: `sql/migration_2026-08-16_rubrik_master.sql`
+  (otomatis isi master dari nama rubrik/item yang sudah pernah dipakai).
+- **Rename kolom "Keterangan" → "Spesifikasi/Keterangan"**: label form di
+  `surat_form.php` + header tabel item di dokumen PDF & Word Surat Penawaran
+  (`pdf_generator.php`, `docx_generator.php`).
+- Diuji manual: curl create surat pakai rubrik dari dropdown → cek DB → render
+  PDF (kolom "Spesifikasi/Keterangan" tampil benar) + screenshot form.
+
 ## Backlog / P1-P2 (belum dikerjakan, menunggu feedback user)
 - P1: Halaman edit outlet homepage dari UI (saat ini via tabel `outlets`,
   butuh phpMyAdmin manual untuk ubah selain lewat DB).

@@ -96,7 +96,7 @@ function build_surat_docx(array $surat, array $items, array $media, array $insta
     }
     $section->addTextBreak($t['break1']);
 
-    $headers = ['Nama Rubrik/Item', 'Keterangan', 'Harga/Bulan'];
+    $headers = ['Nama Rubrik/Item', 'Spesifikasi/Keterangan', 'Harga/Bulan'];
     if ($hasYearly) $headers[] = 'Harga/Tahun';
     $colWidth = (int)(9500 / count($headers));
     $tbl = $section->addTable(['borderSize' => 6, 'borderColor' => '333333', 'cellMargin' => 80]);

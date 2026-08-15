@@ -69,6 +69,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $instansiList = db()->query('SELECT * FROM instansi WHERE is_active = 1 ORDER BY nama')->fetchAll();
 $mediaList = db()->query('SELECT * FROM media WHERE is_active = 1 ORDER BY kode')->fetchAll();
+$rubrikList = db()->query('SELECT * FROM rubrik WHERE is_active = 1 ORDER BY nama_rubrik')->fetchAll();
+
+function rubrik_options(array $rubrikList, ?string $selected = null): string {
+    $html = '<option value="">-- Pilih Rubrik/Item --</option>';
+    $found = false;
+    foreach ($rubrikList as $r) {
+        $sel = $selected !== null && $selected === $r['nama_rubrik'];
+        if ($sel) $found = true;
+        $html .= '<option value="' . e($r['nama_rubrik']) . '" ' . ($sel ? 'selected' : '') . '>' . e($r['nama_rubrik']) . '</option>';
+    }
+    if ($selected !== null && $selected !== '' && !$found) {
+        $html .= '<option value="' . e($selected) . '" selected>' . e($selected) . '</option>';
+    }
+    return $html;
+}
 
 $pageTitle = $id > 0 ? 'Ubah Kwitansi' : 'Kwitansi Baru';
 $activeNav = 'arsip';
@@ -114,7 +129,7 @@ require __DIR__ . '/../includes/sidebar.php';
   <div id="item-rows" data-testid="kwitansi-item-rows">
     <?php if ($items): foreach ($items as $it): ?>
     <div class="item-row" style="grid-template-columns:3fr 2fr auto">
-      <div><label>Nama Item</label><input type="text" name="item_nama[]" value="<?= e($it['nama_item']) ?>" required data-testid="k-item-nama-input"></div>
+      <div><label>Nama Item</label><select name="item_nama[]" required data-testid="k-item-nama-input"><?= rubrik_options($rubrikList, $it['nama_item']) ?></select></div>
       <div><label>Harga</label><input type="text" name="item_harga[]" value="<?= e($it['harga']) ?>" class="item-harga" required data-testid="k-item-harga-input"></div>
       <button type="button" class="btn-remove" data-testid="k-item-remove-btn">&times;</button>
     </div>
@@ -122,7 +137,7 @@ require __DIR__ . '/../includes/sidebar.php';
   </div>
   <template id="item-row-template">
     <div class="item-row" style="grid-template-columns:3fr 2fr auto">
-      <div><label>Nama Item</label><input type="text" name="item_nama[]" required data-testid="k-item-nama-input"></div>
+      <div><label>Nama Item</label><select name="item_nama[]" required data-testid="k-item-nama-input"><?= rubrik_options($rubrikList) ?></select></div>
       <div><label>Harga</label><input type="text" name="item_harga[]" class="item-harga" required data-testid="k-item-harga-input"></div>
       <button type="button" class="btn-remove" data-testid="k-item-remove-btn">&times;</button>
     </div>

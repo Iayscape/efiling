@@ -74,6 +74,17 @@ CREATE TABLE IF NOT EXISTS jenis_penawaran (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS rubrik (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nama_rubrik VARCHAR(150) NOT NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO rubrik (nama_rubrik) VALUES
+('Advertorial'),('Iklan Display'),('Kolom Opini'),('Liputan Kegiatan'),
+('Publikasi Berita'),('Banner Website'),('Running Text'),('Talkshow/Podcast');
+
 CREATE TABLE IF NOT EXISTS doc_counters (
   id INT AUTO_INCREMENT PRIMARY KEY,
   media_id INT NOT NULL,

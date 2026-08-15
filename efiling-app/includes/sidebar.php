@@ -26,6 +26,7 @@ function navlink($href, $label, $key, $active) {
     <?php navlink('/admin/instansi.php', 'Instansi Tujuan', 'instansi', $__nav); ?>
     <?php navlink('/admin/media.php', 'Media & Legalitas', 'media', $__nav); ?>
     <?php navlink('/admin/jenis.php', 'Jenis Penawaran', 'jenis', $__nav); ?>
+    <?php navlink('/admin/rubrik.php', 'Rubrik/Item', 'rubrik', $__nav); ?>
     <?php navlink('/admin/konsep.php', 'Konsep Surat & Kwitansi', 'konsep', $__nav); ?>
     <?php if ($__u && $__u['role'] === 'admin'): ?>
     <?php navlink('/admin/users.php', 'Pengguna', 'users', $__nav); ?>

@@ -124,7 +124,7 @@ function build_surat_html(array $surat, array $items, array $media, array $insta
         '<tr><td>di</td><td>-</td><td>' . e($instansi['lokasi']) . '</td></tr></table>' .
         '<p>Salam Sejahtera,</p>' .
         '<p>' . $body . '</p>' .
-        '<table class="items"><thead><tr><th>Nama Rubrik/Item</th><th>Keterangan</th><th>Harga/Bulan</th>' . $thYearly . '</tr></thead><tbody>' . $rows . '</tbody></table>' .
+        '<table class="items"><thead><tr><th>Nama Rubrik/Item</th><th>Spesifikasi/Keterangan</th><th>Harga/Bulan</th>' . $thYearly . '</tr></thead><tbody>' . $rows . '</tbody></table>' .
         signature_block_html($media, $surat['tanggal'], false) .
         media_footer_html($media) .
         '</body></html>';

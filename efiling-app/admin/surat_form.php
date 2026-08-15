@@ -130,6 +130,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $instansiList = db()->query('SELECT * FROM instansi WHERE is_active = 1 ORDER BY nama')->fetchAll();
 $mediaList = db()->query('SELECT * FROM media WHERE is_active = 1 ORDER BY kode')->fetchAll();
 $jenisList = db()->query('SELECT * FROM jenis_penawaran WHERE is_active = 1 ORDER BY nama')->fetchAll();
+$rubrikList = db()->query('SELECT * FROM rubrik WHERE is_active = 1 ORDER BY nama_rubrik')->fetchAll();
+
+function rubrik_options(array $rubrikList, ?string $selected = null): string {
+    $html = '<option value="">-- Pilih Rubrik/Item --</option>';
+    $found = false;
+    foreach ($rubrikList as $r) {
+        $sel = $selected !== null && $selected === $r['nama_rubrik'];
+        if ($sel) $found = true;
+        $html .= '<option value="' . e($r['nama_rubrik']) . '" ' . ($sel ? 'selected' : '') . '>' . e($r['nama_rubrik']) . '</option>';
+    }
+    if ($selected !== null && $selected !== '' && !$found) {
+        $html .= '<option value="' . e($selected) . '" selected>' . e($selected) . '</option>';
+    }
+    return $html;
+}
 
 $linkedKwitansi = null;
 if ($id > 0) {
@@ -211,8 +226,8 @@ require __DIR__ . '/../includes/sidebar.php';
   <div id="item-rows" data-testid="surat-item-rows">
     <?php if ($items): foreach ($items as $it): ?>
     <div class="item-row">
-      <div><label>Nama Rubrik</label><input type="text" name="item_nama[]" value="<?= e($it['nama_rubrik']) ?>" required data-testid="item-nama-input"></div>
-      <div><label>Keterangan</label><input type="text" name="item_ket[]" value="<?= e($it['keterangan']) ?>" data-testid="item-ket-input"></div>
+      <div><label>Nama Rubrik</label><select name="item_nama[]" required data-testid="item-nama-input"><?= rubrik_options($rubrikList, $it['nama_rubrik']) ?></select></div>
+      <div><label>Spesifikasi/Keterangan</label><input type="text" name="item_ket[]" value="<?= e($it['keterangan']) ?>" data-testid="item-ket-input"></div>
       <div><label>Harga/Bulan</label><input type="text" name="item_harga[]" value="<?= e($it['harga_bulan']) ?>" class="item-harga" required data-testid="item-harga-input"></div>
       <div><label>Harga/Tahun (opsional)</label><input type="text" name="item_harga_tahun[]" value="<?= e($it['harga_tahun']) ?>" data-testid="item-harga-tahun-input"></div>
       <button type="button" class="btn-remove" data-testid="item-remove-btn">&times;</button>
@@ -221,8 +236,8 @@ require __DIR__ . '/../includes/sidebar.php';
   </div>
   <template id="item-row-template">
     <div class="item-row">
-      <div><label>Nama Rubrik</label><input type="text" name="item_nama[]" required data-testid="item-nama-input"></div>
-      <div><label>Keterangan</label><input type="text" name="item_ket[]" data-testid="item-ket-input"></div>
+      <div><label>Nama Rubrik</label><select name="item_nama[]" required data-testid="item-nama-input"><?= rubrik_options($rubrikList) ?></select></div>
+      <div><label>Spesifikasi/Keterangan</label><input type="text" name="item_ket[]" data-testid="item-ket-input"></div>
       <div><label>Harga/Bulan</label><input type="text" name="item_harga[]" class="item-harga" required data-testid="item-harga-input"></div>
       <div><label>Harga/Tahun (opsional)</label><input type="text" name="item_harga_tahun[]" data-testid="item-harga-tahun-input"></div>
       <button type="button" class="btn-remove" data-testid="item-remove-btn">&times;</button>
