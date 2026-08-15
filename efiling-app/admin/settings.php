@@ -12,6 +12,4 @@ require __DIR__ . '/../includes/sidebar.php';
   <p style="color:var(--text-muted);margin-top:0">Pilih palet warna favorit Anda. Tersedia 100+ pilihan mewakili warna dasar Hitam, Putih, Biru, Kuning &amp; Merah. Pilihan otomatis tersimpan untuk akun Anda.</p>
   <div id="theme-grid-container" data-testid="theme-grid-container"></div>
 </div>
-<script src="/assets/js/theme-manager.js"></script>
-<script>renderThemeGrid(document.getElementById('theme-grid-container'));</script>
 <?php require __DIR__ . '/../includes/footer.php'; ?>

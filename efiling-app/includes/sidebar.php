@@ -6,6 +6,10 @@ function navlink($href, $label, $key, $active) {
     echo '<a class="' . $cls . '" href="' . e($href) . '" data-testid="nav-' . e($key) . '">' . e($label) . '</a>';
 }
 ?>
+<button class="mobile-menu-btn" type="button" data-testid="sidebar-toggle" aria-label="Buka menu">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" data-testid="sidebar-overlay"></div>
 <aside class="sidebar" data-testid="sidebar">
   <div class="sidebar-brand">
     <strong>Barito Media Group</strong>
@@ -20,7 +24,7 @@ function navlink($href, $label, $key, $active) {
   <div class="nav-section-title">Data Master</div>
   <div class="nav-group">
     <?php navlink('/admin/instansi.php', 'Instansi Tujuan', 'instansi', $__nav); ?>
-    <?php navlink('/admin/media.php', 'Media &amp; Legalitas', 'media', $__nav); ?>
+    <?php navlink('/admin/media.php', 'Media & Legalitas', 'media', $__nav); ?>
     <?php navlink('/admin/jenis.php', 'Jenis Penawaran', 'jenis', $__nav); ?>
     <?php if ($__u && $__u['role'] === 'admin'): ?>
     <?php navlink('/admin/users.php', 'Pengguna', 'users', $__nav); ?>

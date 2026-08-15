@@ -18,7 +18,7 @@ $whereSql = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
 
 $sqlParts = [];
 if ($tipe === 'semua' || $tipe === 'penawaran') {
-    $sqlParts[] = "SELECT 'penawaran' AS tipe, s.id, s.nomor_surat AS nomor, s.hal AS judul, s.tahun, s.bulan_label, s.tanggal, i.id AS instansi_id, i.nama AS instansi_nama, m.id AS media_id, m.kode AS media_kode
+    $sqlParts[] = "SELECT 'surat' AS tipe, s.id, s.nomor_surat AS nomor, s.hal AS judul, s.tahun, s.bulan_label, s.tanggal, i.id AS instansi_id, i.nama AS instansi_nama, m.id AS media_id, m.kode AS media_kode
       FROM surat_penawaran s JOIN instansi i ON i.id=s.instansi_id JOIN media m ON m.id=s.media_id";
 }
 if ($tipe === 'semua' || $tipe === 'kwitansi') {
@@ -91,13 +91,13 @@ require __DIR__ . '/../includes/sidebar.php';
         <tr data-testid="arsip-row-<?= e($composite) ?>">
           <td class="checkbox-cell"><input type="checkbox" class="row-checkbox" name="ids[]" value="<?= e($composite) ?>" data-testid="row-checkbox-<?= e($composite) ?>"></td>
           <td><?= e($r['nomor']) ?></td>
-          <td><span class="pill pill-<?= e($r['tipe']) ?>"><?= $r['tipe'] === 'penawaran' ? 'Penawaran' : 'Kwitansi' ?></span></td>
+          <td><span class="pill pill-<?= e($r['tipe']) ?>"><?= $r['tipe'] === 'surat' ? 'Penawaran' : 'Kwitansi' ?></span></td>
           <td style="max-width:280px"><?= e(mb_strimwidth((string)$r['judul'], 0, 70, '...')) ?></td>
           <td><?= e($r['instansi_nama']) ?></td>
           <td><?= e($r['media_kode']) ?></td>
           <td><?= e($r['bulan_label']) ?> <?= (int)$r['tahun'] ?></td>
           <td>
-            <a class="btn btn-sm" href="<?= $r['tipe'] === 'penawaran' ? '/admin/surat_form.php?id=' . (int)$r['id'] : '/admin/kwitansi_form.php?id=' . (int)$r['id'] ?>" data-testid="arsip-edit-<?= e($composite) ?>">Ubah</a>
+            <a class="btn btn-sm" href="<?= $r['tipe'] === 'surat' ? '/admin/surat_form.php?id=' . (int)$r['id'] : '/admin/kwitansi_form.php?id=' . (int)$r['id'] ?>" data-testid="arsip-edit-<?= e($composite) ?>">Ubah</a>
             <a class="btn btn-sm" href="/admin/download.php?type=<?= e($r['tipe']) ?>&id=<?= (int)$r['id'] ?>&format=pdf&action=view" target="_blank" data-testid="arsip-view-<?= e($composite) ?>">PDF</a>
           </td>
         </tr>

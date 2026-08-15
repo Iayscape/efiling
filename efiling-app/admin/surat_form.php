@@ -240,10 +240,8 @@ require __DIR__ . '/../includes/sidebar.php';
   </div>
 </form>
 
-<script>
-window.JENIS_TEMPLATES = <?= json_encode(array_column($jenisList, null, 'id')) ?>;
-window.INSTANSI_NAMES = <?= json_encode(array_column($instansiList, 'nama', 'id')) ?>;
-window.MEDIA_NAMES = <?= json_encode(array_column($mediaList, 'nama', 'id')) ?>;
-</script>
+<script type="application/json" id="jenis-templates-data"><?= json_encode(array_column($jenisList, null, 'id')) ?></script>
+<script type="application/json" id="instansi-names-data"><?= json_encode(array_column($instansiList, 'nama', 'id')) ?></script>
+<script type="application/json" id="media-names-data"><?= json_encode(array_column($mediaList, 'nama', 'id')) ?></script>
 <script src="/assets/js/surat-form.js"></script>
 <?php require __DIR__ . '/../includes/footer.php'; ?>

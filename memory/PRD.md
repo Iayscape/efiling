@@ -72,6 +72,32 @@ Testing oleh agent dilewati atas permintaan user (user menguji sendiri).
 - `config.php` sengaja TIDAK disertakan agar `install.php` berjalan otomatis
   saat pertama upload.
 
+## Implemented (2026-08-15) - Redesign & Bug Fix Round
+- **Bug fix (dilaporkan user)**: unduh dokumen di Arsip Digital salah tampil
+  (Penawaran menampilkan isi Kwitansi). Root cause: mismatch string tipe
+  dokumen ('penawaran' vs 'surat') antara `arsip.php` dan `download.php`.
+  Sudah diverifikasi testing_agent (PDF & bulk ZIP keduanya benar sekarang).
+- **Bug fix**: halaman Personalisasi Tampilan kosong tanpa palet warna. Root
+  cause: Content-Security-Policy (`script-src 'self'`) memblokir semua
+  inline `<script>` — token CSRF & data JSON dipindah ke `<meta>` tag dan
+  `<script type="application/json">` (data island, tidak diblokir CSP).
+  120 swatch kini tampil & berfungsi, diverifikasi testing_agent.
+- **Kontras warna**: seluruh 120 tema personalisasi memakai pasangan
+  teks/latar yang sudah dihitung manual (WCAG relative luminance) — semua
+  kombinasi teks utama & teks muted terverifikasi >=8:1 di 5 grup dasar
+  (Hitam/Putih/Biru/Kuning/Merah). Warna tombol otomatis pilih teks
+  hitam/putih berdasar kontras tertinggi.
+- **Redesign homepage total**: mega menu elegan (hover/klik/Escape, submenu
+  6 outlet dengan logo+tagline), hero carousel 3 slide (autoplay + panah +
+  dot navigation), off-canvas drawer mobile, outlet card dengan tagline
+  resmi (Jembatan Aspirasi, Pemersatu Banua, Sarabakawa, Tergores, Dunia
+  Dalam Genggaman, Bahalap), fully responsive (desktop/tablet/mobile).
+- **Dashboard responsif**: sidebar off-canvas + overlay untuk mobile.
+- Logo 6 media terpasang di homepage (chip putih, kontras baik).
+- Semua perbaikan di atas sudah diverifikasi 2x oleh testing_agent
+  (`test_reports/iteration_1.json` & `iteration_2.json`) — status akhir:
+  semua skenario PASS, tidak ada isu terbuka.
+
 ## Backlog / P1-P2 (belum dikerjakan, menunggu feedback user)
 - P1: Halaman edit outlet homepage dari UI (saat ini via tabel `outlets`,
   butuh phpMyAdmin manual untuk ubah selain lewat DB).

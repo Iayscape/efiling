@@ -8,7 +8,7 @@ $totalInstansi = (int)db()->query('SELECT COUNT(*) FROM instansi WHERE is_active
 $totalMedia = (int)db()->query('SELECT COUNT(*) FROM media WHERE is_active = 1')->fetchColumn();
 
 $recent = db()->query("
-  (SELECT 'penawaran' AS tipe, s.id, s.nomor_surat AS nomor, s.hal AS judul, i.nama AS instansi, m.kode AS media_kode, s.tanggal, s.created_at
+  (SELECT 'surat' AS tipe, s.id, s.nomor_surat AS nomor, s.hal AS judul, i.nama AS instansi, m.kode AS media_kode, s.tanggal, s.created_at
    FROM surat_penawaran s JOIN instansi i ON i.id=s.instansi_id JOIN media m ON m.id=s.media_id)
   UNION ALL
   (SELECT 'kwitansi' AS tipe, k.id, k.nomor_kwitansi AS nomor, k.untuk_pembayaran AS judul, i.nama AS instansi, m.kode AS media_kode, k.tanggal, k.created_at
@@ -48,7 +48,7 @@ require __DIR__ . '/../includes/sidebar.php';
     <?php foreach ($recent as $r): ?>
       <tr data-testid="recent-doc-row">
         <td><?= e($r['nomor']) ?></td>
-        <td><span class="pill pill-<?= e($r['tipe']) ?>"><?= $r['tipe'] === 'penawaran' ? 'Penawaran' : 'Kwitansi' ?></span></td>
+        <td><span class="pill pill-<?= e($r['tipe']) ?>"><?= $r['tipe'] === 'surat' ? 'Penawaran' : 'Kwitansi' ?></span></td>
         <td><?= e($r['instansi']) ?></td>
         <td><?= e($r['media_kode']) ?></td>
         <td><?= e(date('d/m/Y', strtotime($r['tanggal']))) ?></td>

@@ -1,0 +1,67 @@
+{
+  "summary": "End-to-end verification of the Barito Media Group PHP e-filing app (http://127.0.0.1:8090). Verified all fixes claimed by main agent via curl + Playwright + pdfplumber. PDF content-mismatch bug (Penawaran vs Kwitansi single download AND bulk ZIP) is CONFIRMED FIXED. Theme palette (120 swatches, 5 groups HITAM/PUTIH/BIRU/KUNING/MERAH) renders correctly, click updates accent, and persists across reload. Zero CSP errors and zero console errors across all admin pages (dashboard, arsip, settings, instansi, media, users, surat_form, kwitansi_form). Homepage carousel (3 slides, dots, next/prev, ~5.5s auto-advance) works. Mobile drawer opens/closes via toggle, close button, and overlay tap. Dashboard mobile sidebar toggle + overlay works. Outlet cards (6) render. HOWEVER, one HIGH-priority bug found: the desktop 'Media Kami' mega-menu panel does NOT open on hover or click — the panel content (all 6 outlets with taglines) is in the DOM but CSS never reveals it because the JS toggles the .menu-open class on the wrong element.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "Homepage mega menu (desktop)",
+        "issue": "Clicking or hovering [data-testid=\"mega-menu-trigger\"] does NOT open the mega menu panel. Root cause: index.php has TWO elements sharing data-testid=\"mega-menu-item\" (the outer <nav class=\"main-nav\"> at line 27 AND the inner <div class=\"nav-item\"> at line 28). In assets/js/homepage.js the code `var navItem = document.querySelector('[data-testid=\"mega-menu-item\"]')` grabs the FIRST match = the <nav>. So openMenu()/click-toggle adds `menu-open` to <nav>, but the CSS rule that reveals the panel is `.nav-item.menu-open .mega-menu {opacity:1;visibility:visible;...}` (homepage.css line 26) which requires the class on the inner .nav-item. Result: panel stays opacity:0 visibility:hidden forever. Verified by evaluating computed styles after hover: {panelVisibility:'hidden', panelOpacity:'0'}, and by manually adding `menu-open` to the inner .nav-item in devtools which makes the panel appear. All 6 outlet taglines (Jembatan Aspirasi / Pemersatu Banua / Sarabakawa / Tergores / Dunia Dalam Genggaman / Bahalap) ARE present in the rendered HTML — this is purely a JS-selector-vs-CSS mismatch. Fix: either remove data-testid=\"mega-menu-item\" from the outer <nav> (keep only on .nav-item), OR change the JS selector to `.nav-item[data-testid=\"mega-menu-item\"]` / `document.querySelectorAll(...)[1]`.",
+        "selector": "[data-testid=\"mega-menu-trigger\"] / [data-testid=\"mega-menu-panel\"]",
+        "priority": "HIGH"
+      },
+      {
+        "component": "Homepage HTML",
+        "issue": "Duplicate data-testid=\"mega-menu-item\" on two different elements (<nav> and <div class=\"nav-item\">) in /app/efiling-app/index.php lines 27 & 28. Testability antipattern and the direct cause of the mega-menu bug above.",
+        "selector": "[data-testid=\"mega-menu-item\"]",
+        "priority": "HIGH"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "verified_working": [
+    "PDF single download: /admin/download.php?type=surat&id=1 returns Penawaran content ('Hal : Penawaran Publikasi ...', 'Nama Rubrik/Item', no 'KWITANSI' heading). type=kwitansi returns Kwitansi content ('KWITANSI', 'Telah Diterima Dari', 'Terbilang: Rp2.990.000,-').",
+    "Bulk ZIP download (POST action=bulk with ids[]=surat_1&ids[]=kwitansi_1): ZIP contains 2 PDFs in correct folders — Penawaran/*.pdf has Penawaran content, Kwitansi/*.pdf has Kwitansi content. Regression bug (both showing Kwitansi) is FIXED.",
+    "Kwitansi 'terbilang' for Rp2.990.000 = 'DUA JUTA SEMBILAN RATUS SEMBILAN PULUH RIBU RUPIAH' — verified in PDF text.",
+    "/admin/settings.php renders 120 circular color swatches under 5 groups: HITAM, PUTIH, BIRU, KUNING, MERAH (screenshot confirmed).",
+    "Clicking a swatch changes the active accent (sidebar active nav item background color changed from orange to red between screenshots) and persists after full page reload.",
+    "Zero CSP violations, zero JS console errors, zero 'already declared' errors across dashboard.php, arsip.php, settings.php, instansi.php, media.php, users.php, surat_form.php, kwitansi_form.php.",
+    "Homepage hero-carousel: 3 slides, 3 dots, next/prev buttons all functional. Auto-advance verified from slide index 0 -> 1 after 6.5s (interval is 5.5s in JS).",
+    "carousel-dot-0 jumps back to slide 0 correctly.",
+    "6 outlet-card-* elements present on homepage; all 6 taglines present in HTML (verified in raw markup).",
+    "Mobile viewport 390px: mobile-nav-toggle visible, mobile-drawer opens with .open class (screenshot: transform matrix goes from off-screen to on-screen), mobile-drawer-close removes .open class (transform returns to translateX(340px)), drawer-overlay click at coords outside drawer also closes it.",
+    "Admin dashboard mobile: sidebar-toggle visible, sidebar-overlay appears on toggle click, clicking overlay hides sidebar.",
+    "Login flow: admin credentials aqmarsharaya@gmail.com/Aqmar@2026! authenticates and redirects to /admin/dashboard.php. CSRF token on login form is enforced (POST without token returns 403)."
+  ],
+  "test_report_links": [
+    "/tmp/surat1.pdf",
+    "/tmp/kwitansi1.pdf",
+    "/tmp/bulk.zip",
+    "/tmp/settings.png",
+    "/tmp/mega.png",
+    "/tmp/mega2.png"
+  ],
+  "action_items": [
+    "FIX HIGH: /app/efiling-app/index.php lines 27-28 — remove data-testid=\"mega-menu-item\" from the outer <nav class=\"main-nav\"> (keep it only on the inner <div class=\"nav-item\">). This single change will make the mega menu open correctly on hover AND click, because the JS querySelector will then match the correct .nav-item element that the CSS is scoped to. Alternatively, change assets/js/homepage.js line 3 to `var navItem = document.querySelector('.nav-item[data-testid=\"mega-menu-item\"]')`."
+  ],
+  "critical_code_review_comments": [
+    "Duplicate data-testid on two different DOM elements (index.php L27 & L28) violates testability best-practice: each data-testid must be unique. This directly caused the mega-menu bug.",
+    "In assets/js/homepage.js the mega-menu click handler toggles menu-open on the same element that mouseenter/mouseleave manage, causing a subtle UX quirk: a click while hovered will CLOSE (toggle off) the just-opened menu. Consider using explicit open()/close() logic rather than toggle().",
+    "homepage.js openMenu() has a 150ms mouseleave grace but no keyboard focus support (Enter/Space on the trigger button opens via click handler, but Esc doesn't close the menu). Minor a11y polish.",
+    "Overlay z-index in mobile drawer (90) vs drawer (100) is correct, but on the drawer-overlay is a full-viewport element — clicking overlay at coordinates covered by the drawer visually would not close it. Not a functional bug (a tap outside the drawer works), just be aware for future e2e testers."
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "100% (PDF generation single + bulk both correct; PHP endpoints all return expected data)",
+    "frontend": "~92% (mega menu is the only broken flow; all other homepage/admin/settings/mobile flows pass)"
+  },
+  "test_credentials": "admin: aqmarsharaya@gmail.com / Aqmar@2026! — worked. Staff login not re-tested (main agent already verified regression).",
+  "seed_data_creation": "None. Used existing seed rows (surat_penawaran id=1, kwitansi id=1, outlets, etc.).",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "The PDF/ZIP content-mismatch bug is fully verified fixed via pdfplumber text extraction — do not re-test unless code in download.php changes. The theme palette + CSP fixes are also verified. The ONLY outstanding issue is the mega-menu-item data-testid duplication that breaks the desktop mega menu open behavior — one-line fix in index.php. After that fix, re-run the mega menu portion of the homepage tests to confirm panel visibility flips to visible on hover/click.",
+  "rca of the issue": "Mega menu bug RCA — Reproduction: 1) Load http://127.0.0.1:8090/ at 1920x1080. 2) Hover or click 'Media Kami' nav item ([data-testid=mega-menu-trigger]). 3) Expected: [data-testid=mega-menu-panel] becomes visible with 6 outlet chips + taglines. Actual: panel remains hidden (computed visibility:hidden, opacity:0). Root cause: index.php lines 27-28 assign the same data-testid=\"mega-menu-item\" to two nested elements (<nav class=\"main-nav\"> and <div class=\"nav-item\">). homepage.js selects only the FIRST via querySelector, which is the outer <nav>, and toggles menu-open on it. But homepage.css line 26 targets `.nav-item.menu-open .mega-menu` — the class needs to be on the INNER .nav-item. Mitigation: remove the redundant data-testid from the outer <nav>, or change the JS to select the .nav-item explicitly."
+}

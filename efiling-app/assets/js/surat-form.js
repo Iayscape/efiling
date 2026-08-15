@@ -35,14 +35,22 @@ function bindRowEvents() {
   });
 }
 
+function readJsonData(id) {
+  var el = document.getElementById(id);
+  if (!el) return {};
+  try { return JSON.parse(el.textContent); } catch (e) { return {}; }
+}
+
 function fillTokens(str) {
   var instansiSel = document.getElementById('instansi_id');
   var mediaSel = document.getElementById('media_id');
   var tanggal = document.getElementById('tanggal').value;
   var bulanLabel = document.getElementById('bulan_label').value;
   var tahun = document.getElementById('tahun').value;
-  var instansi = window.INSTANSI_NAMES[instansiSel.value] || '';
-  var media = window.MEDIA_NAMES[mediaSel.value] || '';
+  var instansiNames = readJsonData('instansi-names-data');
+  var mediaNames = readJsonData('media-names-data');
+  var instansi = instansiNames[instansiSel.value] || '';
+  var media = mediaNames[mediaSel.value] || '';
   var bulanIdx = tanggal ? parseInt(tanggal.split('-')[1], 10) : 0;
   var bulan = bulanLabel || BULAN_NAMA[bulanIdx] || '';
   return str
@@ -54,7 +62,8 @@ function fillTokens(str) {
 
 function refillFromTemplate() {
   var jenisId = document.getElementById('jenis_id').value;
-  var tpl = window.JENIS_TEMPLATES[jenisId];
+  var jenisTemplates = readJsonData('jenis-templates-data');
+  var tpl = jenisTemplates[jenisId];
   if (!tpl) return;
   document.getElementById('hal').value = fillTokens(tpl.template_hal || '');
   document.getElementById('body').value = fillTokens(tpl.template_body || '');

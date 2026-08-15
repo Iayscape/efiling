@@ -19,5 +19,5 @@ if ($__u && !empty($__u['theme_vars'])) {
 <?php endif; ?>
 </head>
 <body>
-<script>window.CSRF_TOKEN = "<?= csrf_token() ?>";</script>
+<meta name="csrf-token" content="<?= e(csrf_token()) ?>">
 <div class="app-shell">

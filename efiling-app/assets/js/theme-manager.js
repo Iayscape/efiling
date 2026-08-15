@@ -7,49 +7,81 @@ function hslToHex(h, s, l) {
   return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
 }
 
-function buildTheme(id, group, label, bg, surface, surfaceHover, primary, primaryHover, textMain, textMuted, border) {
-  return { id, group, label, vars: { '--bg': bg, '--surface': surface, '--surface-hover': surfaceHover, '--primary': primary, '--primary-hover': primaryHover, '--text-main': textMain, '--text-muted': textMuted, '--border': border } };
+function srgbToLinear(c) {
+  c /= 255;
+  return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+}
+
+function relativeLuminance(hex) {
+  hex = hex.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  return 0.2126 * srgbToLinear(r) + 0.7152 * srgbToLinear(g) + 0.0722 * srgbToLinear(b);
+}
+
+function contrastRatio(hex1, hex2) {
+  const l1 = relativeLuminance(hex1);
+  const l2 = relativeLuminance(hex2);
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function bestTextColor(bgHex) {
+  const withBlack = contrastRatio(bgHex, '#000000');
+  const withWhite = contrastRatio(bgHex, '#ffffff');
+  return withBlack >= withWhite ? '#000000' : '#ffffff';
+}
+
+// Fixed, pre-verified contrast-safe base pairs (all >= 8:1 for text vs bg & surface)
+const GROUP_BASE = {
+  Hitam:  { bg: '#09090B', surface: '#131316', surfaceHover: '#1c1c20', textMain: '#FFFFFF', textMuted: '#D4D4D8', border: '#2a2a30' },
+  Putih:  { bg: '#FAFAFA', surface: '#FFFFFF', surfaceHover: '#F1F1F3', textMain: '#111827', textMuted: '#374151', border: '#E5E7EB' },
+  Biru:   { bg: '#0A1128', surface: '#101B3D', surfaceHover: '#172A57', textMain: '#FFFFFF', textMuted: '#CBD5E1', border: '#1E2A4A' },
+  Kuning: { bg: '#1C1506', surface: '#2B2209', surfaceHover: '#3A2E0C', textMain: '#FFF7D6', textMuted: '#E8D9A0', border: '#4A3B12' },
+  Merah:  { bg: '#420909', surface: '#4a0d0d', surfaceHover: '#551212', textMain: '#FEE2E2', textMuted: '#FCC2C2', border: '#6b1616' },
+};
+
+const GROUP_HUE_RANGE = {
+  Hitam: [0, 360],
+  Putih: [0, 360],
+  Biru: [196, 252],
+  Kuning: [32, 62],
+  Merah: [344, 380],
+};
+
+function buildTheme(id, group, label, primary) {
+  const base = GROUP_BASE[group];
+  return {
+    id, group, label,
+    vars: {
+      '--bg': base.bg, '--surface': base.surface, '--surface-hover': base.surfaceHover,
+      '--primary': primary, '--primary-hover': primary, '--primary-text': bestTextColor(primary),
+      '--text-main': base.textMain, '--text-muted': base.textMuted, '--border': base.border,
+    },
+  };
 }
 
 function generateThemes() {
   const themes = [];
-
-  // HITAM group - dark backgrounds, varying accent hues (24)
-  for (let i = 0; i < 24; i++) {
-    const hue = Math.round((360 / 24) * i);
-    const primary = hslToHex(hue, 70, 55);
-    themes.push(buildTheme(`hitam-${i}`, 'Hitam', `Hitam ${i + 1}`, '#0d0f13', '#161920', '#1e222b', primary, hslToHex(hue, 70, 45), '#f1f2f4', '#8b93a1', '#262b35'));
-  }
-
-  // PUTIH group - light backgrounds, varying accent hues (24)
-  for (let i = 0; i < 24; i++) {
-    const hue = Math.round((360 / 24) * i);
-    const primary = hslToHex(hue, 65, 45);
-    themes.push(buildTheme(`putih-${i}`, 'Putih', `Putih ${i + 1}`, '#fafafa', '#ffffff', '#f1f2f4', primary, hslToHex(hue, 65, 35), '#111318', '#6b7280', '#e2e4e9'));
-  }
-
-  // BIRU group - blue dominant, dark & light variants (26)
-  for (let i = 0; i < 13; i++) {
-    const hue = 200 + i * 3;
-    themes.push(buildTheme(`biru-dark-${i}`, 'Biru', `Biru Gelap ${i + 1}`, '#0a1120', '#111a2e', '#182238', hslToHex(hue, 80, 58), hslToHex(hue, 80, 48), '#eef2ff', '#8b9bc0', '#1f2a44'));
-    themes.push(buildTheme(`biru-light-${i}`, 'Biru', `Biru Terang ${i + 1}`, '#f4f7fd', '#ffffff', '#e9f0fb', hslToHex(hue, 75, 45), hslToHex(hue, 75, 35), '#0c1a33', '#5b6c8f', '#dbe4f5'));
-  }
-
-  // KUNING group - amber/yellow dominant (24)
-  for (let i = 0; i < 12; i++) {
-    const hue = 38 + i * 3;
-    themes.push(buildTheme(`kuning-dark-${i}`, 'Kuning', `Kuning Gelap ${i + 1}`, '#1a1405', '#241c08', '#332a0e', hslToHex(hue, 85, 55), hslToHex(hue, 85, 45), '#fff8e1', '#b8a978', '#3d3212'));
-    themes.push(buildTheme(`kuning-light-${i}`, 'Kuning', `Kuning Terang ${i + 1}`, '#fffbeb', '#ffffff', '#fef3c7', hslToHex(hue, 80, 42), hslToHex(hue, 80, 32), '#241c08', '#8a7a44', '#f5e6b8'));
-  }
-
-  // MERAH group - red/crimson dominant (24)
-  for (let i = 0; i < 12; i++) {
-    const hue = 350 + i * 2;
-    themes.push(buildTheme(`merah-dark-${i}`, 'Merah', `Merah Gelap ${i + 1}`, '#1a0808', '#240d0d', '#331414', hslToHex(hue % 360, 78, 55), hslToHex(hue % 360, 78, 45), '#fef2f2', '#c99', '#3d1717'));
-    themes.push(buildTheme(`merah-light-${i}`, 'Merah', `Merah Terang ${i + 1}`, '#fef6f6', '#ffffff', '#fde8e8', hslToHex(hue % 360, 72, 45), hslToHex(hue % 360, 72, 35), '#240d0d', '#946060', '#f6d5d5'));
-  }
-
+  Object.keys(GROUP_BASE).forEach(group => {
+    const [hueStart, hueEnd] = GROUP_HUE_RANGE[group];
+    const count = 24;
+    for (let i = 0; i < count; i++) {
+      const hue = (hueStart + ((hueEnd - hueStart) / count) * i) % 360;
+      const sat = group === 'Putih' ? 62 : 72;
+      const light = group === 'Putih' ? 42 : (group === 'Kuning' ? 56 : 52);
+      const primary = hslToHex(hue, sat, light);
+      themes.push(buildTheme(`${group.toLowerCase()}-${i}`, group, `${group} ${i + 1}`, primary));
+    }
+  });
   return themes;
+}
+
+function getCsrfToken() {
+  const meta = document.querySelector('meta[name="csrf-token"]');
+  return meta ? meta.content : '';
 }
 
 function applyTheme(theme) {
@@ -62,7 +94,7 @@ function applyTheme(theme) {
   fetch('/admin/save_theme.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `csrf_token=${encodeURIComponent(window.CSRF_TOKEN || '')}&theme_id=${encodeURIComponent(theme.id)}&theme_vars=${encodeURIComponent(JSON.stringify(theme.vars))}`
+    body: `csrf_token=${encodeURIComponent(getCsrfToken())}&theme_id=${encodeURIComponent(theme.id)}&theme_vars=${encodeURIComponent(JSON.stringify(theme.vars))}`
   });
 }
 
@@ -77,8 +109,9 @@ function applyStoredThemeOnLoad() {
 }
 
 function renderThemeGrid(container) {
+  if (!container) return;
   const themes = generateThemes();
-  const groups = ['Hitam', 'Putih', 'Biru', 'Kuning', 'Merah'];
+  const groups = Object.keys(GROUP_BASE);
   const activeId = localStorage.getItem('theme_id');
   groups.forEach(group => {
     const title = document.createElement('div');
