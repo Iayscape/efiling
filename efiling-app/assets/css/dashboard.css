@@ -26,8 +26,7 @@ a{color:inherit;text-decoration:none}
 .account-info span{display:block;font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
 .account-chevron{flex-shrink:0;color:var(--text-muted);transition:transform .2s ease}
 .account-dropdown.open .account-chevron{transform:rotate(180deg)}
-.account-menu{position:absolute;left:.75rem;right:.75rem;bottom:100%;margin-bottom:.4rem;background:var(--surface-hover);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.35);opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease,visibility .18s ease}
-.account-dropdown.open .account-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.account-menu{position:absolute;left:.75rem;right:.75rem;bottom:100%;margin-bottom:.4rem;background:var(--surface-hover);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.35)}
 .account-menu a{display:block;padding:.7rem 1rem;font-size:.82rem;color:var(--text-main);transition:background-color .15s ease}
 .account-menu a:hover{background:var(--surface)}
 .account-menu-logout{color:#f87171!important}

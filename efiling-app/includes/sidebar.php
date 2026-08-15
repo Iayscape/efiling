@@ -41,7 +41,7 @@ function navlink($href, $label, $key, $active) {
       </span>
       <svg class="account-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
-    <div class="account-menu" data-testid="account-menu">
+    <div class="account-menu" data-testid="account-menu" style="display:none">
       <a href="/admin/settings.php" data-testid="account-menu-settings">Personalisasi Tampilan</a>
       <a href="/admin/profile.php" data-testid="account-menu-profile">Profil Saya</a>
       <a href="/logout.php" class="account-menu-logout" data-testid="account-menu-logout">Keluar</a>
